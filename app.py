@@ -10,7 +10,7 @@ app.secret_key = 'TIGER'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'vincent98'
+app.config['MYSQL_PASSWORD'] = 'alappatt'
 app.config['MYSQL_DB'] = 'quiz'
 
 mysql = MySQL(app)
@@ -65,7 +65,9 @@ def register():
 
 @app.route("/userhome")
 def userhome():
-    return ("Hello World")
+    if 'loggedin' in session:
+        return render_template('profile.html', username=session['username'])
+    return redirect(url_for('login'))
 
 if __name__=="__main__":
     app.run(debug=True);  
