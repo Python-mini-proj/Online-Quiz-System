@@ -1,6 +1,7 @@
 from flask import Flask, flash,render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import re
+import random
 
 import MySQLdb.cursors
 
@@ -69,5 +70,36 @@ def userhome():
         return render_template('profile.html', username=session['username'])
     return redirect(url_for('login'))
 
+@app.route("/python")
+def python():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * FROM py ')
+        py1 = cursor.fetchall()
+        print(py1)
+        pyqs=[]
+        for q in py1:
+            pyqs.append(q[0])
+        print(pyqs)
+        my_list=[]
+        for item in range(5):
+            qr=random.choice(pyqs)
+            cursor.execute('SELECT * FROM py where qs = %s ',(qr,))
+            value=cursor.fetchall()
+            #print(value)
+            my_list.append(value)
+        print(my_list)
+        print(my_list[0][0])
+        return render_template('pyqspage.html', value=my_list, counter=0 )
+        #print(qr)
+    return ('Home')
+
+@app.route("/checkanswer")
+def check():
+    return("Hello")
+
 if __name__=="__main__":
     app.run(debug=True);  
+
+
+
