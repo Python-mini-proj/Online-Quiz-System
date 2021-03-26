@@ -2,6 +2,7 @@ from flask import Flask, flash,render_template, request, redirect, url_for, sess
 from flask_mysqldb import MySQL
 import re
 import random
+import itertools
 
 import MySQLdb.cursors
 
@@ -9,6 +10,7 @@ app = Flask(__name__)
 
 app.secret_key = 'TIGER'
 
+app.jinja_env.filters['zip'] = zip
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'alappatt'
@@ -82,15 +84,20 @@ def python():
             pyqs.append(q[0])
         print(pyqs)
         my_list=[]
-        for item in range(5):
+        counter=(1,2,3,4,5)
+        for (item,num) in zip(range(5) ,counter):
             qr=random.choice(pyqs)
             cursor.execute('SELECT * FROM py where qs = %s ',(qr,))
             value=cursor.fetchall()
-            #print(value)
+            value=list(value)
+            value.append(num)
             my_list.append(value)
         print(my_list)
-        print(my_list[0][0])
-        return render_template('pyqspage.html', value=my_list )
+        #print(my_list[0][0])
+        
+        # my_list.append(counter)
+        # print(my_list)
+        return render_template('pyqspage.html', value=my_list , counterhtml=counter)
         #print(qr)
     return ('Home')
 
