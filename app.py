@@ -90,7 +90,7 @@ def python():
             my_list.append(value)
         print(my_list)
         print(my_list[0][0])
-        return render_template('pyqspage.html', value=my_list, counter=0 )
+        return render_template('pyqspage.html', value=my_list )
         #print(qr)
     return ('Home')
 
