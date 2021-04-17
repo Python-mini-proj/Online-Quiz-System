@@ -19,6 +19,28 @@
     <link rel="stylesheet" href="static/assets/css/Simple-Slider.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
+    var ans=[];
+      
+            function getAnswers()
+            {
+                document.getElementById('UserAnswers').innerHTML=" ";
+                
+                var e=document.getElementsByTagName('input');
+                for(i=0;i<e.length;i++)
+                {
+                    console.log(e[i].type);
+                    if(e[i].type=='radio')
+                    {
+                        if(e[i].checked)
+                        {
+                            ans.push(e[i].value);  
+                            document.getElementById('UserAnswers').innerHTML+="Q" + e[i].name + "The answer you have selected :" + e[i].value + ans + "<br/>";
+                            
+                        }
+                    }
+                }
+                console.log(ans);
+            }
         $(document).ready(function()
         {
             $("#but1").click(function()
@@ -26,22 +48,36 @@
                 $(".rb").show();
                 $(".rb").attr("disabled",true);
             });
-        });
-        function getAnswers()
-        {
-            document.getElementById('UserAnswers').innerHTML=" ";
-            var e=document.getElementsByTagName('input');
-            for(i=0;i<=e.length;i++)
+
+            
+        
+            document.getElementById('submitButton').addEventListener('click', function(e)
             {
-                if(e[i].type=="radio")
-                {
-                    if(e[i].checked)
-                    {
-                        document.getElementById('UserAnswers').innerHTML+="Q" + e[i].name + "The answer you have selected :" + e[i].value + "<br/>";
-                    }
-                }
-            }
-        }
+                e.preventDefault();
+                console.log(ans);
+                //document.getElementsByName('userans').value = JSON.stringify(ans);
+                /*var fd = new FormData(document.getElementsByTagName("input"));
+                for (var i = 0; i < ans.length; i++) {
+                    fd.append('userans[]', ans[i]);
+                }*/
+                fetch('/checkanswer', {
+                    method: 'POST', 
+                    mode: 'cors', 
+                    cache: 'no-cache', 
+                    credentials: 'same-origin', 
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    redirect: 'follow',
+                    referrerPolicy: 'no-referrer', 
+                    body: JSON.stringify({"userans" : ans})
+                });
+            });
+
+        });
+        
+        
+        
     </script>
 </head>
 
@@ -64,7 +100,7 @@
 
     <div>
     {% for item in value %}
-    <form action="/checkanswer" , method="POST">
+    <!-- <form action="/checkanswer" , method="POST"> -->
         <table>
             <tr>
                 <td>{{item[1]}} ) {{item[0][0]}}</td>
@@ -81,16 +117,23 @@
             <tr>
                 <td><input type="radio" id="option4" class="rb" name="{{item[1]}}" value="{{item[0][4]}}">{{item[0][4]}}</td>
             </tr>
-            <tr>
-                <td><label id="corans" class="rb" style="display: none;color: green"><b>{{item[0][5]}}</b></label></td>
-            </tr>
+            <!-- <tr> -->
+                <td><input type="hidden" id="answer" class="rb" name="ans" value="{{item[0][5]}}">{{item[0][5]}}</td>
+            <!-- </tr> -->
         </table>
         <br>
-    </form>    
+  
     {% endfor %}
+    <!-- <input type="submit" value="CHeck Answer" />
+    </form>   -->
     <input type="submit" value="Click for Results" id="but1" onclick="getAnswers();"/>
     <br>
     <b id="UserAnswers" style="color: green"></b>
+    
+    <form name="input">
+        <input type="hidden" name="userans[]" id="myans"  >       
+        <input type ="button" value="Submit" id="submitButton">
+    </form>
     </div>
     <script src="static/assets/js/jquery.min.js"></script>
     <script src="static/assets/bootstrap/js/bootstrap.min.js"></script>
