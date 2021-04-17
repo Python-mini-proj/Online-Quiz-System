@@ -1,8 +1,9 @@
-from flask import Flask, flash,render_template, request, redirect, url_for, session
+from flask import Flask, flash,render_template, request, redirect, url_for, session, jsonify
 from flask_mysqldb import MySQL
 import re
 import random
 import itertools
+import sys
 
 import MySQLdb.cursors
 
@@ -13,7 +14,7 @@ app.secret_key = 'TIGER'
 app.jinja_env.filters['zip'] = zip
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'alappatt'
+app.config['MYSQL_PASSWORD'] = 'vincent98'
 app.config['MYSQL_DB'] = 'quiz'
 
 mysql = MySQL(app)
@@ -72,17 +73,17 @@ def userhome():
         return render_template('profile.html', username=session['username'])
     return redirect(url_for('login'))
 
-@app.route("/python")
+@app.route("/python", methods=['GET', 'POST'])
 def python():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor()
         cursor.execute('SELECT * FROM py ')
         py1 = cursor.fetchall()
-        print(py1)
+        #print(py1)
         pyqs=[]
         for q in py1:
             pyqs.append(q[0])
-        print(pyqs)
+        #print(pyqs)
         my_list=[]
         counter=(1,2,3,4,5)
         for (item,num) in zip(range(5) ,counter):
@@ -92,21 +93,40 @@ def python():
             value=list(value)
             value.append(num)
             my_list.append(value)
-        print(my_list)
+        #print(my_list)
         #print(my_list[0][0])
         
         # my_list.append(counter)
         # print(my_list)
-        return render_template('pyqspage.html', value=my_list , counterhtml=counter)
+        return render_template('pyqspage1.html', value=my_list , counterhtml=counter)
         #print(qr)
     return ('Home')
 
-@app.route("/checkanswer")
+@app.route("/checkanswer", methods=['GET', 'POST'])
 def check():
-    return("Hello")
+    print('***********', request ,request.json)
+    if 'loggedin' in session:
+        if request.method == "POST":
+            data = request.json
+            print(data)
+
+            return jsonify(data)
+
+# @app.route("/checkanswer", methods=['GET', 'POST'])
+# def check():
+#     print(request)
+#     if 'loggedin' in session:
+#         if request.method == "POST" and "userans" in request.form :
+#             print(request)
+#             uopt=request.form["userans"]
+#             # ans=request.form["ans"]
+#             print(request.form)
+#             print(uopt)
+#             return "check"
+
+
 
 if __name__=="__main__":
-    app.run(debug=True);  
-
+    app.run(debug=True); 
 
 
