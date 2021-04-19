@@ -20,21 +20,26 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
     var ans=[];
+    var corrans=[];
       
             function getAnswers()
             {
-                document.getElementById('UserAnswers').innerHTML=" ";
-                
+                document.getElementById('UserAnswers').innerHTML=" ";               
                 var e=document.getElementsByTagName('input');
                 for(i=0;i<e.length;i++)
                 {
+                    if(e[i].type=='hidden')
+                    {
+                        corrans.push(e[i].value);
+                    }    
+                    console.log(corrans);    
                     console.log(e[i].type);
                     if(e[i].type=='radio')
                     {
                         if(e[i].checked)
                         {
                             ans.push(e[i].value);  
-                            document.getElementById('UserAnswers').innerHTML+="Q" + e[i].name + "The answer you have selected :" + e[i].value + ans + "<br/>";
+                            document.getElementById('UserAnswers').innerHTML+="Q" + e[i].name + "The answer you have selected :" + e[i].value + "<br/>";
                             
                         }
                     }
@@ -70,7 +75,7 @@
                     },
                     redirect: 'follow',
                     referrerPolicy: 'no-referrer', 
-                    body: JSON.stringify({"userans" : ans})
+                    body: JSON.stringify({"userans" : ans,"cans" : corrans})
                 });
             });
 
@@ -98,7 +103,7 @@
         </div>
     </nav>  
 
-    <div>
+    <div style="margin-top: 250px;margin-left: 50px;">
     {% for item in value %}
     <!-- <form action="/checkanswer" , method="POST"> -->
         <table>
@@ -117,9 +122,10 @@
             <tr>
                 <td><input type="radio" id="option4" class="rb" name="{{item[1]}}" value="{{item[0][4]}}">{{item[0][4]}}</td>
             </tr>
-            <!-- <tr> -->
-                <td><input type="hidden" id="answer" class="rb" name="ans" value="{{item[0][5]}}">{{item[0][5]}}</td>
-            <!-- </tr> -->
+            <tr>
+                <td><label id="corans" class="rb" style="display: none;color: green"><b>{{item[0][5]}}</b></label></td>
+                <td><input type="hidden" id="corans" class="rb" style="display: none;color: green" value="{{item[0][5]}}"></td>
+            </tr>
         </table>
         <br>
   
