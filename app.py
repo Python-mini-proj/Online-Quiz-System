@@ -73,7 +73,7 @@ def userhome():
         return render_template('profile.html', username=session['username'])
     return redirect(url_for('login'))
 
-@app.route("/python", methods=['GET', 'POST'])
+@app.route("/python")
 def python():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor()
@@ -85,20 +85,37 @@ def python():
             pyqs.append(q[0])
         #print(pyqs)
         my_list=[]
-        counter=(1,2,3,4,5)
-        for (item,num) in zip(range(5) ,counter):
+        flag=0
+        qsno=0
+        for (item,num) in zip(range(10),range(10)):
             qr=random.choice(pyqs)
-            cursor.execute('SELECT * FROM py where qs = %s ',(qr,))
-            value=cursor.fetchall()
-            value=list(value)
-            value.append(num)
-            my_list.append(value)
-        #print(my_list)
+            for dash in my_list:
+                if qr==dash[0][0]:
+                    pyqs.remove(qr)
+                    flag=-1
+                    break
+                else:
+                    flag=0
+            if flag!=-1:
+                qsno+=1
+                cursor.execute('SELECT * FROM py where qs = %s ',(qr,))
+                value=cursor.fetchall()
+                value=list(value)
+                value.append(qsno)
+                my_list.append(value)
+            else:
+                continue
+            if len(my_list)>=5:
+                break
+        # print("_______")
+        # print(pyqs)
+        # print(my_list)
+        # print(len(my_list))
         #print(my_list[0][0])
         
         # my_list.append(counter)
         # print(my_list)
-        return render_template('pyqspage1.html', value=my_list , counterhtml=counter)
+        return render_template('pyqspage.html', value=my_list)
         #print(qr)
     return ('Home')
 
@@ -127,6 +144,6 @@ def check():
 
 
 if __name__=="__main__":
-    app.run(debug=True); 
+    app.run(debug=True);  
 
 
