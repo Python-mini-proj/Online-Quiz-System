@@ -132,13 +132,13 @@
     {% endfor %}
     <!-- <input type="submit" value="CHeck Answer" />
     </form>   -->
-    <input type="submit" value="Click for Results" id="but1" onclick="getAnswers();"/>
+    <input type="submit" value="Click for Results" id="submitButton" onclick="getAnswers();"/>
     <br>
     <b id="UserAnswers" style="color: green"></b>
     
-    <form name="input">
-        <input type="hidden" name="userans[]" id="myans"  >       
-        <input type ="button" value="Submit" id="submitButton">
+    <form name="input" action="/score">
+        <!-- <input type="hidden" name="userans[]" id="myans"  >        -->
+        <input type ="submit" value="Submit" >
     </form>
     </div>
     <script src="static/assets/js/jquery.min.js"></script>
