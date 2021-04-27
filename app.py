@@ -14,7 +14,7 @@ app.secret_key = 'TIGER'
 app.jinja_env.filters['zip'] = zip
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'vincent98'
+app.config['MYSQL_PASSWORD'] = 'alappatt'
 app.config['MYSQL_DB'] = 'quiz'
 
 mysql = MySQL(app)
@@ -61,6 +61,7 @@ def register():
             msg = 'Please fill out the form!'
         else:
             cursor.execute('INSERT INTO account1 VALUES (NULL, %s, %s, %s)', (username, password, email,))
+            cursor.execute('INSERT INTO pyscore VALUES (0, %s, 0)', (username,))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
@@ -75,7 +76,9 @@ def userhome():
 
 @app.route("/python")
 def python():
+    counter=0
     if 'loggedin' in session:
+        counter=counter+1
         cursor = mysql.connection.cursor()
         cursor.execute('SELECT * FROM py ')
         py1 = cursor.fetchall()
@@ -126,20 +129,31 @@ def check():
         if request.method == "POST":
             data = request.json
             print(data)
+            print(data['userans'])
+            print(data['cans'])
+            score=0
+            for (uans,corrans) in zip (data['userans'], data['cans']):
+                if uans==corrans:
+                    score=score+1
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT score FROM pyscore WHERE Name = %s', ( session['username'],))
+            prevscore=cursor.fetchone()
+            print(prevscore['score'])
+            prevscore=prevscore['score']
+            cursor.execute('SELECT counter FROM pyscore WHERE Name = %s', ( session['username'],))
+            prevcounter=cursor.fetchone()
+            prevcounter=prevcounter['counter']
+            cursor.execute('UPDATE pyscore SET score = %s ,counter = %s WHERE Name=%s ', (max(score,prevscore),prevcounter+1,session['username'],))
+            mysql.connection.commit()
+            print("GG Nigga you have scored {} marks " .format(score))
+            return render_template("score.html" , counter=prevcounter, score=score )
 
-            return jsonify(data)
 
-# @app.route("/checkanswer", methods=['GET', 'POST'])
-# def check():
-#     print(request)
-#     if 'loggedin' in session:
-#         if request.method == "POST" and "userans" in request.form :
-#             print(request)
-#             uopt=request.form["userans"]
-#             # ans=request.form["ans"]
-#             print(request.form)
-#             print(uopt)
-#             return "check"
+@app.route("/logout")
+def logout():
+   session.pop('loggedin', None)
+   session.pop('username', None)
+   return redirect(url_for('login'))
 
 
 
