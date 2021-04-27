@@ -146,8 +146,27 @@ def check():
             cursor.execute('UPDATE pyscore SET score = %s ,counter = %s WHERE Name=%s ', (max(score,prevscore),prevcounter+1,session['username'],))
             mysql.connection.commit()
             print("GG Nigga you have scored {} marks " .format(score))
-            return render_template("score.html" , counter=prevcounter, score=score )
+            session['score']=score
+        # return render_template('score.html' , counter=prevcounter, score=score )
+        return redirect(url_for('scoreboard'))
+    # return render_template('profile.html')
 
+@app.route("/score", methods=['GET', 'POST'])
+def scoreboard():
+    if 'loggedin' in session:
+        if request.method == "GET" :
+            score=session.get('score')
+            return render_template('score.html' , score=score )
+
+@app.route("/leaderboard", methods=['GET', 'POST'])
+def leaderboard():
+    if 'loggedin' in session:
+        if request.method == "GET" :
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM pyscore')
+            info=cursor.fetchall()
+            print(info)
+            return render_template('leaderboard.html' ,  value=info )
 
 @app.route("/logout")
 def logout():
