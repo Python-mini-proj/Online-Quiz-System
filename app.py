@@ -82,11 +82,9 @@ def python():
         cursor = mysql.connection.cursor()
         cursor.execute('SELECT * FROM py ')
         py1 = cursor.fetchall()
-        #print(py1)
         pyqs=[]
         for q in py1:
             pyqs.append(q[0])
-        #print(pyqs)
         my_list=[]
         flag=0
         qsno=0
@@ -122,6 +120,195 @@ def python():
         #print(qr)
     return ('Home')
 
+@app.route("/os")
+def os():
+    counter=0
+    if 'loggedin' in session:
+        counter=counter+1
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * FROM os ')
+        py1 = cursor.fetchall()
+        pyqs=[]
+        for q in py1:
+            pyqs.append(q[0])
+        my_list=[]
+        flag=0
+        qsno=0
+        for (item,num) in zip(range(10),range(10)):
+            qr=random.choice(pyqs)
+            for dash in my_list:
+                if qr==dash[0][0]:
+                    pyqs.remove(qr)
+                    flag=-1
+                    break
+                else:
+                    flag=0
+            if flag!=-1:
+                qsno+=1
+                cursor.execute('SELECT * FROM os where qs = %s ',(qr,))
+                value=cursor.fetchall()
+                value=list(value)
+                value.append(qsno)
+                my_list.append(value)
+            else:
+                continue
+            if len(my_list)>=5:
+                break
+    
+        return render_template('pyqspage.html', value=my_list)
+    return ('Home')
+
+@app.route("/mp")
+def mp():
+    counter=0
+    if 'loggedin' in session:
+        counter=counter+1
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * FROM mp ')
+        py1 = cursor.fetchall()
+        pyqs=[]
+        for q in py1:
+            pyqs.append(q[0])
+        my_list=[]
+        flag=0
+        qsno=0
+        for (item,num) in zip(range(10),range(10)):
+            qr=random.choice(pyqs)
+            for dash in my_list:
+                if qr==dash[0][0]:
+                    pyqs.remove(qr)
+                    flag=-1
+                    break
+                else:
+                    flag=0
+            if flag!=-1:
+                qsno+=1
+                cursor.execute('SELECT * FROM mp where qs = %s ',(qr,))
+                value=cursor.fetchall()
+                value=list(value)
+                value.append(qsno)
+                my_list.append(value)
+            else:
+                continue
+            if len(my_list)>=5:
+                break
+    
+        return render_template('pyqspage.html', value=my_list)
+    return ('Home')
+
+@app.route("/aoa")
+def aoa():
+    counter=0
+    if 'loggedin' in session:
+        counter=counter+1
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * FROM aoa ')
+        py1 = cursor.fetchall()
+        pyqs=[]
+        for q in py1:
+            pyqs.append(q[0])
+        my_list=[]
+        flag=0
+        qsno=0
+        for (item,num) in zip(range(10),range(10)):
+            qr=random.choice(pyqs)
+            for dash in my_list:
+                if qr==dash[0][0]:
+                    pyqs.remove(qr)
+                    flag=-1
+                    break
+                else:
+                    flag=0
+            if flag!=-1:
+                qsno+=1
+                cursor.execute('SELECT * FROM aoa where qs = %s ',(qr,))
+                value=cursor.fetchall()
+                value=list(value)
+                value.append(qsno)
+                my_list.append(value)
+            else:
+                continue
+            if len(my_list)>=5:
+                break
+    
+        return render_template('pyqspage.html', value=my_list)
+    return ('Home')
+
+@app.route("/dbms")
+def dbms():
+    counter=0
+    if 'loggedin' in session:
+        counter=counter+1
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * FROM dbms ')
+        py1 = cursor.fetchall()
+        pyqs=[]
+        for q in py1:
+            pyqs.append(q[0])
+        my_list=[]
+        flag=0
+        qsno=0
+        for (item,num) in zip(range(10),range(10)):
+            qr=random.choice(pyqs)
+            for dash in my_list:
+                if qr==dash[0][0]:
+                    pyqs.remove(qr)
+                    flag=-1
+                    break
+                else:
+                    flag=0
+            if flag!=-1:
+                qsno+=1
+                cursor.execute('SELECT * FROM dbms where qs = %s ',(qr,))
+                value=cursor.fetchall()
+                value=list(value)
+                value.append(qsno)
+                my_list.append(value)
+            else:
+                continue
+            if len(my_list)>=5:
+                break
+    
+        return render_template('pyqspage.html', value=my_list)
+    return ('Home')
+
+@app.route("/apt")
+def apt():
+    counter=0
+    if 'loggedin' in session:
+        counter=counter+1
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * FROM GK ')
+        py1 = cursor.fetchall()
+        pyqs=[]
+        for q in py1:
+            pyqs.append(q[0])
+        my_list=[]
+        flag=0
+        qsno=0
+        for (item,num) in zip(range(10),range(10)):
+            qr=random.choice(pyqs)
+            for dash in my_list:
+                if qr==dash[0][0]:
+                    pyqs.remove(qr)
+                    flag=-1
+                    break
+                else:
+                    flag=0
+            if flag!=-1:
+                qsno+=1
+                cursor.execute('SELECT * FROM GK where qs = %s ',(qr,))
+                value=cursor.fetchall()
+                value=list(value)
+                value.append(qsno)
+                my_list.append(value)
+            else:
+                continue
+            if len(my_list)>=5:
+                break
+    
+        return render_template('pyqspage.html', value=my_list)
+    return ('Home')
 @app.route("/checkanswer", methods=['GET', 'POST'])
 def check():
     print('***********', request ,request.json)
@@ -163,7 +350,7 @@ def leaderboard():
     if 'loggedin' in session:
         if request.method == "GET" :
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM pyscore')
+            cursor.execute('SELECT * from pyscore order by score desc , counter asc')
             info=cursor.fetchall()
             print(info)
             return render_template('leaderboard.html' ,  value=info )
